@@ -1,0 +1,44 @@
+格式：http://status.svr.monitor.wxsearch.org/api/datasources/proxy/3/query?db=wxsearch_server_status&q=
+
+具体的查询sql如下：
+
+SELECT non_negative_derivative(mean("UdpInCsumErrors"), 1s) FROM "nstat" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(10s) fill(null);SELECT non_negative_derivative(mean("UdpInErrors"), 1s) FROM "nstat" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(10s) fill(null);SELECT non_negative_derivative(mean("UdpNoPorts"), 1s) FROM "nstat" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(10s) fill(null)&epoch=ms
+
+SELECT last("zombies") FROM "processes" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("used_percent") FROM "disk" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND "path" = '/' AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("usage_iowait") FROM "cpu" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND "cpu" = 'cpu-total' AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT mean(usage_user) as "user", mean(usage_system) as "system", mean(usage_softirq) as "softirq", mean(usage_steal) as "steal", mean(usage_nice) as "nice", mean(usage_irq) as "irq", mean(usage_iowait) as "iowait", mean(usage_guest) as "guest", mean(usage_guest_nice) as "guest_nice"  FROM "cpu" WHERE "host" =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ and cpu = 'cpu-total' AND time > now() - 1h GROUP BY time(10s), *
+
+SELECT mean(load1) as short,mean(load5) as medium,mean(load15) as long FROM "system" WHERE host =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ AND time > now() - 1h GROUP BY time(10s), * ORDER BY asc
+
+SELECT mean(running) as running, mean(blocked) as blocked, mean(sleeping) as sleeping, mean(stopped) as stopped, mean(zombies) as zombies, mean(paging) as paging, mean(unknown) as unknown FROM "processes" WHERE host =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ AND time > now() - 1h GROUP BY time(10s), host ORDER BY asc
+
+SELECT last("uptime") FROM "system" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("load5") FROM "system" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("total") FROM "processes" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("total_threads") FROM "processes" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("usage_idle") * -1 + 100 FROM "cpu" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND "cpu" = 'cpu-total' AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("used_percent") FROM "mem" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("used_percent") FROM "swap" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("used_percent") FROM "disk" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND "path" = '/' AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT last("usage_iowait") FROM "cpu" WHERE "host" =~ /^master-calcsvr\.realsvr\.bj-gm1-idc1-area1\.wxsearch\.org$/ AND "cpu" = 'cpu-total' AND time > now() - 1h GROUP BY time(30s) fill(null)
+
+SELECT mean(usage_user) as "user", mean(usage_system) as "system", mean(usage_softirq) as "softirq", mean(usage_steal) as "steal", mean(usage_nice) as "nice", mean(usage_irq) as "irq", mean(usage_iowait) as "iowait", mean(usage_guest) as "guest", mean(usage_guest_nice) as "guest_nice"  FROM "cpu" WHERE "host" =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ and cpu = 'cpu-total' AND time > now() - 1h GROUP BY time(10s), *
+
+SELECT mean(load1) as short,mean(load5) as medium,mean(load15) as long FROM "system" WHERE host =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ AND time > now() - 1h GROUP BY time(10s), * ORDER BY asc
+
+SELECT mean(running) as running, mean(blocked) as blocked, mean(sleeping) as sleeping, mean(stopped) as stopped, mean(zombies) as zombies, mean(paging) as paging, mean(unknown) as unknown FROM "processes" WHERE host =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ AND time > now() - 1h GROUP BY time(10s), host ORDER BY asc
+
+SELECT non_negative_derivative(mean(context_switches),1s)as "context switches"  FROM "kernel" WHERE host =~ /master-calcsvr.realsvr.bj-gm1-idc1-area1.wxsearch.org$/ AND time > now() - 1h GROUP BY time(10s), host ORDER BY asc
+
