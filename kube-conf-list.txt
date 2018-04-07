@@ -1,0 +1,51 @@
+kubectl config set-cluster kubernetes \
+    --certificate-authority=ca.pem \
+    --embed-certs=true \
+    --server=${KUBE_APISERVER} \
+    --kubeconfig=../kubelet.conf
+
+kubectl config set-credentials system:node:master1 \
+    --client-certificate=kubelet.pem \
+    --client-key=kubelet-key.pem \
+    --embed-certs=true \
+    --kubeconfig=../kubelet.conf
+
+kubectl config set-context system:node:master1@kubernetes \
+    --cluster=kubernetes \
+    --user=system:node:master1 \
+    --kubeconfig=../kubelet.conf
+
+kubectl config use-context system:node:master1@kubernetes \
+    --kubeconfig=../kubelet.conf
+	
+	
+	
+	
+openssl genrsa -out sa.key 2048
+openssl rsa -in sa.key -pubout -out sa.pub
+
+
+cat <<EOF > /etc/kubernetes/encryption.yml
+kind: EncryptionConfig
+apiVersion: v1
+resources:
+  - resources:
+      - secrets
+    providers:
+      - aescbc:
+          keys:
+            - name: key1
+              secret: 3zkRxSWC01fbJFXXJRUbiT2JvQflBHMpO3gG1DVeFSE=
+      - identity: {}
+EOF
+
+
+
+
+
+
+编辑距离不一样会有问题：
+
+
+PERSON_http://advanced.jhu.edu/about-us/faculty/kevin-scott-phd/_Kevin_Scott
+

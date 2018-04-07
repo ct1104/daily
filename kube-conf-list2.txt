@@ -1,0 +1,61 @@
+etcd  -listen-peer-urls http://192.168.133.128:2380 \
+  -listen-client-urls http://192.168.133.128:2379,http://127.0.0.1:2379 \
+  -advertise-client-urls http://192.168.133.128:2379 \
+  -data-dir /data/default.etcd
+  
+  
+# 默认的数据路径:./default.etcd
+
+etcd --listen-peer-urls 'http://192.168.1.204:2380' 
+--advertise-client-urls 'http://192.168.1.204:2379' 
+--listen-client-urls 'http://192.168.1.204:2379' 
+-data-dir /data/default.etcd -name etcd1 &
+
+
+
+FLANNEL_OPTIONS="--logtostderr=false --log_dir=/data/tools/flannel/ --etcd-prefix=/atomic.io/network  --etcd-endpoints=http://192.168.133.128:2379 --iface=eth0"
+
+
+
+kube-apiserver --address=192.168.133.128  --insecure-port=880 \
+--service-cluster-ip-range='192.168.10.1/24' \
+--log_dir=/data/log/kubernete_test/logs/kube \
+--kubelet_port=10250 \
+--v=0 --logtostderr=false \
+--etcd_servers=http://192.168.133.128:2379 --allow_privileged=false 
+
+
+ETCDCTL_API=3 etcdctl \
+    --cacert=${CA}/etcd-ca.pem \
+    --cert=${CA}/etcd.pem \
+    --key=${CA}/etcd-key.pem \
+    --endpoints="http://192.168.133.128:2379" \
+    endpoint health
+	
+kube-controller-manager  --v=0 --logtostderr=false \
+--log_dir=/data/log/kubernete_test/logs/kube \
+--master=http://192.168.133.128:880 --address=192.168.133.128
+
+kube-scheduler  --v=0 \
+--log_dir=/data/log/kubernete_test/logs/kube \
+--master=192.168.133.128:880
+
+
+
+
+cfssl gencert \
+  -ca=ca.pem \
+  -ca-key=ca-key.pem \
+  -config=ca-config.json \
+  -hostname=192.168.133.128,192.168.133.129,192.168.133.130,127.0.0.1,kubernetes.default \
+  -profile=kubernetes \
+  apiserver-csr.json | cfssljson -bare apiserver
+
+
+kube-proxy  --logtostderr=false --v=0 --master=http://192.168.133.128:880
+
+
+kubelet  --logtostderr=false --v=0 --allow-privileged=false  \
+--log_dir=/data/log/kubernete_test/logs/kube \
+--address=192.168.133.128  --port=10250  \
+--hostname_override=192.168.133.128  --api_servers=http://192.168.133.128:880
